@@ -33,3 +33,4 @@ dispatcher.add_handler(start_handler)
 glitchText_handler = MessageHandler(Filters.text & (~Filters.command), glitchText)
 dispatcher.add_handler(glitchText_handler)
  
+updater.start_polling()
