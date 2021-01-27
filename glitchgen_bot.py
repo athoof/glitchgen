@@ -1,11 +1,7 @@
-from telegram.ext import Updater
-from telegram.ext import CommandHandler
-from telegram.ext import MessageHandler, Filters
+from telegram.ext import Updater. CommandHandler, MessageHandler, Filters
 
-import random
-import json
 import os
-from zalgo_text import zalgo   
+from zalgo_text import zalgo
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -21,20 +17,20 @@ dispatcher = updater.dispatcher
 def glitchText(update, context):
   g = zalgo.zalgo().zalgofy(update.message.text)
   context.bot.send_message(chat_id=update.effective_chat.id, text=g)
-  
+
 def glitchImage(update, context):
   context.bot.send_photo(chat_id=update.effective_chat.id, photo=update.message.photo)
-  
-def start(update, context): 
+
+def start(update, context):
   context.bot.send_message(chat_id=update.effective_chat.id, text="Send image or text to glitch")
-  
+
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
 glitchText_handler = MessageHandler(Filters.text & (~Filters.command), glitchText)
 dispatcher.add_handler(glitchText_handler)
 
-glitchImage_handler = MessageHandler(Filters.photo & (~Filters.command), glitchImage)
+glitchImage_handler = MessageHandler(Filters.forwarded & Filters.photo | Filters.photo, glitchImage)
 dispatcher.add_handler(glitchImage_handler)
- 
+
 updater.start_polling()
